@@ -48,13 +48,24 @@ jobs:
         run: |
           buildozer -v android debug 2>&1 | tee build.log
 
+      - name: Find APK
+        run: |
+          echo "Searching for APK..."
+          echo "Current directory:"
+          pwd
+          echo "APK files:"
+          find . -type f -name "*.apk" -print
+
       - name: Upload APK
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: TicTacToe-APK
           path: |
-           **/*.apk
+            bin/*.apk
+            .buildozer/**/*.apk
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Upload build log on failure
         if: failure()
