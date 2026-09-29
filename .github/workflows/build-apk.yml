@@ -46,6 +46,7 @@ jobs:
         env:
           PYTHONFORANDROID_PREREQUISITES_INSTALL_INTERACTIVE: '0'
         run: |
+          set -o pipefail
           buildozer -v android debug 2>&1 | tee build.log
 
       - name: Find APK
