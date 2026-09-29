@@ -33,13 +33,28 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            autoconf automake build-essential cmake gettext git \
-            libffi-dev libltdl-dev libncurses5-dev libncursesw5-dev \
-            libssl-dev libtool pkg-config patch unzip zip zlib1g-dev
+            autoconf \
+            automake \
+            build-essential \
+            cmake \
+            gettext \
+            git \
+            libffi-dev \
+            libltdl-dev \
+            libncurses5-dev \
+            libncursesw5-dev \
+            libssl-dev \
+            libtool \
+            pkg-config \
+            patch \
+            unzip \
+            zip \
+            zlib1g-dev
 
-      - name: Install Buildozer
+      - name: Install Buildozer and Cython
         run: |
           python -m pip install --upgrade pip setuptools wheel
+          python -m pip install cython
           python -m pip install buildozer
 
       - name: Build debug APK
@@ -50,6 +65,7 @@ jobs:
           buildozer -v android debug 2>&1 | tee build.log
 
       - name: Find APK
+        if: success()
         run: |
           echo "Searching for APK..."
           echo "Current directory:"
