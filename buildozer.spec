@@ -9,7 +9,7 @@ source.dir = .
 source.include_exts = py,json,txt,png,jpg,jpeg,ttf,wav
 source.exclude_dirs = bin,tests,.git,.buildozer,p4a-recipes
 
-requirements = python3,pygame-ce
+requirements = python3==3.13.7,pygame-ce
 
 orientation = portrait
 fullscreen = 1
