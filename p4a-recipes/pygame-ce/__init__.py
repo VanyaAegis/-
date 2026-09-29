@@ -25,9 +25,10 @@ class PygameCeRecipe(CompiledComponentsPythonRecipe):
         "png",
     ]
 
-    # Cython must be installed inside python-for-android's hostpython.
+    # Packages required inside python-for-android's hostpython.
     hostpython_prerequisites = [
         "Cython>=0.29,<3.1",
+        "setuptools",
     ]
 
     call_hostpython_via_targetpython = False
@@ -42,17 +43,25 @@ class PygameCeRecipe(CompiledComponentsPythonRecipe):
             ).read()
 
             env = self.get_recipe_env(arch)
-            env["ANDROID_ROOT"] = join(self.ctx.ndk.sysroot, "usr")
+            env["ANDROID_ROOT"] = join(
+                self.ctx.ndk.sysroot,
+                "usr",
+            )
 
             png = self.get_recipe("png", self.ctx)
+
             png_lib_dir = join(
                 png.get_build_dir(arch.arch),
                 ".libs",
             )
+
             png_inc_dir = png.get_build_dir(arch)
 
             jpeg = self.get_recipe("jpeg", self.ctx)
-            jpeg_inc_dir = jpeg_lib_dir = jpeg.get_build_dir(arch.arch)
+
+            jpeg_inc_dir = jpeg_lib_dir = jpeg.get_build_dir(
+                arch.arch
+            )
 
             sdl2_mixer_recipe = self.get_recipe(
                 "sdl2_mixer",
