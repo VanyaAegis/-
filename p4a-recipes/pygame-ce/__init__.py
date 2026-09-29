@@ -43,11 +43,13 @@ class PygameCeRecipe(CompiledComponentsPythonRecipe):
             ).read()
 
             env = self.get_recipe_env(arch)
+
             env["ANDROID_ROOT"] = join(
                 self.ctx.ndk.sysroot,
                 "usr",
             )
 
+            # PNG
             png = self.get_recipe("png", self.ctx)
 
             png_lib_dir = join(
@@ -57,12 +59,24 @@ class PygameCeRecipe(CompiledComponentsPythonRecipe):
 
             png_inc_dir = png.get_build_dir(arch)
 
+            # JPEG
             jpeg = self.get_recipe("jpeg", self.ctx)
 
-            jpeg_inc_dir = jpeg_lib_dir = jpeg.get_build_dir(
-                arch.arch
+            jpeg_inc_dir = jpeg.get_build_dir(arch.arch)
+            jpeg_lib_dir = jpeg.get_build_dir(arch.arch)
+
+            # SDL2_image
+            sdl2_image_recipe = self.get_recipe(
+                "sdl2_image",
+                self.ctx,
             )
 
+            sdl_image_includes = ""
+
+            for include_dir in sdl2_image_recipe.get_include_dirs(arch):
+                sdl_image_includes += f"-I{include_dir} "
+
+            # SDL2_mixer
             sdl2_mixer_recipe = self.get_recipe(
                 "sdl2_mixer",
                 self.ctx,
@@ -73,6 +87,7 @@ class PygameCeRecipe(CompiledComponentsPythonRecipe):
             for include_dir in sdl2_mixer_recipe.get_include_dirs(arch):
                 sdl_mixer_includes += f"-I{include_dir} "
 
+            # Generate pygame-ce Setup file
             setup_file = setup_template.format(
                 sdl_includes=(
                     " -I"
@@ -95,21 +110,22 @@ class PygameCeRecipe(CompiledComponentsPythonRecipe):
                     + " -L"
                     + arch.ndk_lib_dir_versioned
                 ),
+
                 sdl_ttf_includes="-I"
                 + join(
                     self.ctx.bootstrap.build_dir,
                     "jni",
                     "SDL2_ttf",
                 ),
-                sdl_image_includes="-I"
-                + join(
-                    self.ctx.bootstrap.build_dir,
-                    "jni",
-                    "SDL2_image",
-                ),
+
+                sdl_image_includes=sdl_image_includes,
+
                 sdl_mixer_includes=sdl_mixer_includes,
+
                 jpeg_includes="-I" + jpeg_inc_dir,
+
                 png_includes="-I" + png_inc_dir,
+
                 freetype_includes="",
             )
 
