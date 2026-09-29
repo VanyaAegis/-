@@ -9,15 +9,15 @@ source.dir = .
 source.include_exts = py,json,txt,png,jpg,jpeg,ttf,wav
 source.exclude_dirs = bin,tests,.git,.buildozer,p4a-recipes
 
-requirements = python3==3.13.7,pygame-ce
+requirements = python3==3.14.2,hostpython3==3.14.2,pygame-ce
 
 orientation = portrait
 fullscreen = 1
 
 android.api = 35
-android.minapi = 23
+android.minapi = 24
 android.ndk = 27c
-android.ndk_api = 23
+android.ndk_api = 24
 android.archs = arm64-v8a
 android.accept_sdk_license = True
 android.private_storage = True
